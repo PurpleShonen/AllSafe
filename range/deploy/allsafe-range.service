@@ -1,0 +1,40 @@
+# Allsafe Range — systemd unit
+# Install: sudo cp deploy/allsafe-range.service /etc/systemd/system/
+#          sudo systemctl daemon-reload && sudo systemctl enable --now allsafe-range
+#
+# Runs as an unprivileged service account, isolated from the marketing site's
+# process. This is INTENTIONALLY VULNERABLE software — the hardening below limits
+# blast radius, it does not make the app safe. Keep it on an isolated VM.
+[Unit]
+Description=Allsafe Range (intentionally vulnerable training app)
+After=network.target
+
+[Service]
+Type=simple
+User=allsafe-range
+Group=allsafe-range
+WorkingDirectory=/opt/allsafe-range
+Environment=RANGE_DB_PATH=/var/lib/allsafe-range/range.db
+Environment=RANGE_UPLOAD_DIR=/var/lib/allsafe-range/uploads
+Environment=RANGE_LOG_DIR=/var/log/allsafe-range
+# Turn individual modules off here if a session only needs some, e.g.:
+# Environment=RANGE_MODULE_A03=0
+ExecStartPre=/opt/allsafe-range/.venv/bin/flask --app run init-db
+ExecStart=/opt/allsafe-range/.venv/bin/gunicorn -c deploy/gunicorn.conf.py run:app
+Restart=on-failure
+RestartSec=3
+
+# --- Containment (does NOT neutralise the app's deliberate bugs) ------------
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/allsafe-range /var/log/allsafe-range
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+# The app binds loopback only; Apache is the sole ingress.
+
+[Install]
+WantedBy=multi-user.target

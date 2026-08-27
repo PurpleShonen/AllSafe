@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}A06 coupon — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a06.home') }}">&larr; A06</a></p>{% endblock %}
+{% block content %}
+  <h1>Apply a coupon</h1>
+  <p class="sub">Codes: <code>WELCOME10</code>, <code>SOC25</code>, <code>RENEWAL50</code>. Reuse is not blocked.</p>
+  <form method="post">
+    <label for="c">Coupon code</label>
+    <input type="text" id="c" name="code" value="RENEWAL50">
+    <button type="submit">Apply</button>
+  </form>
+  {% if result %}
+    <div class="flash {{ 'ok' if result.ok else 'err' }}">{{ result.message }}</div>
+  {% endif %}
+  <p class="muted">Stacked discount for your session: <code>{{ applied }}%</code></p>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}A07 session — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a07.home') }}">&larr; A07</a></p>{% endblock %}
+{% block content %}
+  <h1>Session inspector</h1>
+  {% if who %}
+    <div class="flash ok">Current session user: <code>{{ who }}</code></div>
+  {% else %}
+    <div class="flash err">No session user. Sign in via /a07/login first.</div>
+  {% endif %}
+  <div class="panel bad">
+    <h3>CWE-613 / configuration</h3>
+    <ul class="muted">
+      <li>Session lifetime: ~3650 days (see <code>PERMANENT_SESSION_LIFETIME</code>)</li>
+      <li><code>SESSION_COOKIE_HTTPONLY = False</code> — readable from JavaScript</li>
+      <li>Combine with the A05 stored XSS to exfiltrate <code>document.cookie</code></li>
+    </ul>
+  </div>
+{% endblock %}

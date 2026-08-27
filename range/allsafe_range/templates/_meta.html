@@ -1,0 +1,6 @@
+{# Module header: category, CWEs, and what is wrong. Included by every module page. #}
+<h1>{{ meta.owasp }}</h1>
+<p class="sub">
+  {% for cwe in meta.cwe %}<span class="tag cwe">{{ cwe }}</span>{% endfor %}
+  {{ meta.summary }}
+</p>

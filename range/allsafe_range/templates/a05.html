@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}A05 Injection — Allsafe Range{% endblock %}
+{% block crumb %}{% include "_crumb.html" %}{% endblock %}
+{% block content %}
+  {% include "_meta.html" %}
+  <h2>SQL injection</h2>
+  <p><a class="btn" href="{{ url_for('a05.search') }}">Account search</a>
+     &nbsp;<a class="btn" href="{{ url_for('a05.login') }}">Login bypass</a></p>
+  <h2>Cross-site scripting</h2>
+  <p><a class="btn" href="{{ url_for('a05.greet') }}">Reflected (/a05/greet)</a>
+     &nbsp;<a class="btn" href="{{ url_for('a05.feedback') }}">Stored (/a05/feedback)</a></p>
+
+  <div class="panel good">
+    <h3>What the logs should show</h3>
+    <ul class="muted">
+      <li><code>access.log</code> — a <code>suspected: ["sqli"]</code> or <code>["xss"]</code> tag on the request line</li>
+      <li><code>app.log</code> — <code>account_search</code> carrying the exact SQL that ran</li>
+      <li><code>app.log</code> — <code>sql_login_success</code> with <code>via: sql_injection</code></li>
+      <li><code>app.log</code> — <code>reflected_xss_payload</code> / <code>feedback_stored</code> with the payload</li>
+    </ul>
+  </div>
+{% endblock %}

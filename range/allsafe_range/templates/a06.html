@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}A06 Insecure Design — Allsafe Range{% endblock %}
+{% block crumb %}{% include "_crumb.html" %}{% endblock %}
+{% block content %}
+  {% include "_meta.html" %}
+  {% if note %}<div class="flash ok">{{ note }}</div>{% endif %}
+
+  <h2>1. Coupon with no use limit</h2>
+  <p class="muted">
+    <code>max_uses</code> is in the schema and never checked. Call it in a loop
+    and stack the discount past 100%.
+  </p>
+  <p><a class="btn" href="{{ url_for('a06.coupon') }}">Open the coupon form</a></p>
+  <p class="muted">Current stacked discount for your session: <code>{{ applied }}%</code></p>
+  <pre>for i in $(seq 1 12); do curl -s -c j -b j -d code=RENEWAL50 http://range.allsafe.local/a06/coupon.json; done</pre>
+
+  <h2>2. Transfer with no balance check</h2>
+  <p class="muted">The source balance is allowed to go negative.</p>
+  <form action="{{ url_for('a06.transfer') }}" method="post">
+    <label for="amt">Amount</label>
+    <input type="number" id="amt" name="amount" value="500">
+    <input type="hidden" name="from" value="me">
+    <input type="hidden" name="to" value="vault">
+    <button type="submit">Transfer me &rarr; vault</button>
+  </form>
+  <table>
+    <tr><th>Account</th><th>Balance</th></tr>
+    {% for k, v in ledger.items() %}
+      <tr><td>{{ k }}</td><td {% if v < 0 %}style="color:#f0a39c;"{% endif %}>{{ v }}</td></tr>
+    {% endfor %}
+  </table>
+
+  <div class="panel good">
+    <h3>What the logs should show</h3>
+    <ul class="muted">
+      <li><code>access.log</code> — many <code>POST /a06/coupon</code> from one IP in a short window (the rate-limit tell)</li>
+      <li><code>app.log</code> — <code>coupon_applied</code> with <code>over_limit: true</code> and a climbing <code>stacked_discount</code></li>
+      <li><code>app.log</code> — <code>credit_transfer</code> with <code>overdrawn: true</code></li>
+    </ul>
+  </div>
+{% endblock %}

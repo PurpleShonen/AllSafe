@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}A01 fetcher — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a01.home') }}">&larr; A01</a></p>{% endblock %}
+{% block content %}
+  <h1>Client status-page fetcher</h1>
+  <p class="sub">Server-side fetch with no allow-list — CWE-918.</p>
+
+  <form method="post">
+    <label for="u">URL to check</label>
+    <input type="text" id="u" name="url" value="{{ url }}" placeholder="http://127.0.0.1:5000/healthz">
+    <button type="submit">Fetch</button>
+  </form>
+
+  {% if error %}<div class="flash err">{{ error }}</div>{% endif %}
+
+  {% if body is not none %}
+    <h3>Response</h3>
+    <p class="muted">
+      status {{ info.status }} &middot; {{ info.content_type }} &middot; {{ info.bytes }} bytes
+    </p>
+    {# Escaped on output — this range demonstrates SSRF here, not XSS. #}
+    <pre>{{ body }}</pre>
+  {% endif %}
+
+  <div class="panel">
+    <h3>Things worth trying</h3>
+    <ul class="muted">
+      <li><code>http://127.0.0.1:5000/healthz</code> — the app talking to itself</li>
+      <li><code>file:///etc/passwd</code> — urllib honours file://</li>
+      <li><code>http://10.0.0.1/</code> — reaching into the VM's private network</li>
+      <li><code>http://169.254.169.254/</code> — refused by default, and logged as
+          <code>ssrf_metadata_blocked</code></li>
+    </ul>
+  </div>
+{% endblock %}

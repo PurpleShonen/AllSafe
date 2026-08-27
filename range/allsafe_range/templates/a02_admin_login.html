@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}A02 admin — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a02.home') }}">&larr; A02</a></p>{% endblock %}
+{% block content %}
+  <h1>Range Administration</h1>
+  <p class="sub">Restricted. Allegedly.</p>
+  {% if error %}<div class="flash err">{{ error }}</div>{% endif %}
+  <form method="post">
+    <label for="u">Username</label>
+    <input type="text" id="u" name="username" autocomplete="off">
+    <label for="p">Password</label>
+    <input type="password" id="p" name="password" autocomplete="off">
+    <button type="submit">Sign in</button>
+  </form>
+  <div class="panel bad">
+    Default credentials for this build: <code>{{ default_user }}</code> /
+    <code>{{ default_pass }}</code>. A real target would not tell you; it would
+    just accept them.
+  </div>
+{% endblock %}

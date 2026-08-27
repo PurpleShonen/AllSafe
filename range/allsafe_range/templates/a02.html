@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}A02 Security Misconfiguration — Allsafe Range{% endblock %}
+{% block crumb %}{% include "_crumb.html" %}{% endblock %}
+{% block content %}
+  {% include "_meta.html" %}
+
+  <h2>1. Admin panel on default credentials</h2>
+  <p class="muted">Shipped with <code>admin</code> / <code>admin</code>. Nobody changed them.</p>
+  <p><a class="btn" href="{{ url_for('a02.admin') }}">Open the admin panel</a></p>
+
+  <h2>2. Verbose error handling</h2>
+  <p class="muted">
+    An unhandled exception renders its full traceback to the client, complete
+    with source paths and local variables.
+  </p>
+  <p><a class="btn" href="{{ url_for('a02.crash', divisor=0) }}">Trigger a 500</a></p>
+
+  <h2>3. Open directory listing</h2>
+  <p class="muted">A folder of things that should never have been deployed.</p>
+  <p><a class="btn" href="{{ url_for('a02.files_index') }}">Browse /a02/files/</a></p>
+
+  <div class="panel good">
+    <h3>What the logs should show</h3>
+    <ul class="muted">
+      <li><code>app.log</code> — <code>default_credential_login_success</code> at CRITICAL</li>
+      <li><code>app.log</code> — repeated <code>admin_login_failed</code> before it, if they guessed</li>
+      <li><code>app.log</code> — <code>unhandled_exception</code> carrying the traceback</li>
+      <li><code>app.log</code> — <code>directory_listing_served</code> then <code>sensitive_file_served</code></li>
+      <li><code>access.log</code> — <code>GET /a02/files/.env</code> returning 200</li>
+    </ul>
+  </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}A05 reflected XSS — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a05.home') }}">&larr; A05</a></p>{% endblock %}
+{% block content %}
+  <h1>Greeter</h1>
+  <p class="sub">CWE-79 reflected — <code>name</code> is rendered unescaped.</p>
+  <form method="get">
+    <label for="n">Your name</label>
+    <input type="text" id="n" name="name" value="{{ raw }}">
+    <button type="submit">Greet me</button>
+  </form>
+  {% if raw %}<div class="panel">Hello, {{ reflected }}!</div>{% endif %}
+  <div class="panel"><h3>Try</h3><pre>&lt;script&gt;alert(document.domain)&lt;/script&gt;
+&lt;img src=x onerror=alert(1)&gt;</pre></div>
+{% endblock %}

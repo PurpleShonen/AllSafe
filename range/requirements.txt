@@ -1,0 +1,4 @@
+# Allsafe Range — runtime dependencies (current, patched versions)
+# This is the DEFAULT install. It contains no known-vulnerable pins.
+Flask>=3.0,<4.0
+gunicorn>=21.2

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}A09 Logging Failures — Allsafe Range{% endblock %}
+{% block crumb %}{% include "_crumb.html" %}{% endblock %}
+{% block content %}
+  {% include "_meta.html" %}
+
+  <div class="panel bad">
+    <strong>This module hides a blind spot.</strong>
+    <p class="muted" style="margin:8px 0 0;">
+      One of the two vault endpoints below does not log its failed attempts to
+      <code>app.log</code>. Brute-force each, then compare what landed in
+      <code>app.log</code>. The difference is the finding.
+    </p>
+  </div>
+
+  <h2>Vault A — <code>/a09/vault</code></h2>
+  <p><a class="btn" href="{{ url_for('a09.vault') }}">Open vault A</a></p>
+
+  <h2>Vault B — <code>/a09/vault-fixed</code></h2>
+  <p><a class="btn" href="{{ url_for('a09.vault_fixed') }}">Open vault B</a></p>
+
+  <div class="panel good">
+    <h3>What the logs should show — and should NOT</h3>
+    <ul class="muted">
+      <li><code>access.log</code> — <em>both</em> vaults show their <code>POST</code> requests; HTTP logging cannot be opted out of</li>
+      <li><code>app.log</code> — vault B emits <code>vault_unlock_failed</code> on every wrong PIN</li>
+      <li><code>app.log</code> — vault A emits <strong>nothing</strong> on a wrong PIN. That silence is CWE-778</li>
+      <li>Lesson: presence in the HTTP log is not the same as security-event coverage</li>
+    </ul>
+  </div>
+{% endblock %}

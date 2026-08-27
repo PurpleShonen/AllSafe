@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}A07 register — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a07.home') }}">&larr; A07</a></p>{% endblock %}
+{% block content %}
+  <h1>Register</h1>
+  <p class="sub">No length, complexity, or breach check. The only rule is that both fields are non-empty.</p>
+  {% if message %}<div class="flash {{ 'ok' if ok else 'err' }}">{{ message }}</div>{% endif %}
+  <form method="post">
+    <label for="u">Username</label>
+    <input type="text" id="u" name="username" autocomplete="off">
+    <label for="p">Password</label>
+    <input type="text" id="p" name="password" value="1" autocomplete="off">
+    <button type="submit">Create account</button>
+  </form>
+{% endblock %}

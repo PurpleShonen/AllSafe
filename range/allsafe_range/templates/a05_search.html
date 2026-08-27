@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}A05 search — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a05.home') }}">&larr; A05</a></p>{% endblock %}
+{% block content %}
+  <h1>Account search</h1>
+  <p class="sub">CWE-89 — the term goes straight into the WHERE clause.</p>
+  <form method="get">
+    <label for="q">Client name</label>
+    <input type="text" id="q" name="q" value="{{ term }}" placeholder="Northgate">
+    <button type="submit">Search</button>
+  </form>
+  {% if executed %}<h3>Executed SQL</h3><pre>{{ executed }}</pre>{% endif %}
+  {% if error %}<div class="flash err">{{ error }}</div>{% endif %}
+  {% if rows %}
+    <table>
+      <tr><th>id</th><th>client</th><th>contract</th><th>monthly</th></tr>
+      {% for r in rows %}
+        <tr><td>{{ r['id'] }}</td><td>{{ r['client_name'] }}</td>
+            <td>{{ r['contract_ref'] }}</td><td>{{ r['monthly_value'] }}</td></tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+  <div class="panel">
+    <h3>Try</h3>
+    <pre>Northgate' OR '1'='1
+x' UNION SELECT id, username, password_md5, role FROM users --</pre>
+  </div>
+{% endblock %}

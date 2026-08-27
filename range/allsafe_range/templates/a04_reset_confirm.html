@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}A04 confirm reset — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a04.home') }}">&larr; A04</a></p>{% endblock %}
+{% block content %}
+  <h1>Set a new password</h1>
+  <form method="post">
+    <label for="t">Reset token</label>
+    <input type="text" id="t" name="token" value="{{ token }}">
+    <label for="np">New password</label>
+    <input type="text" id="np" name="new_password" placeholder="anything at all — no policy is enforced">
+    <button type="submit">Change password</button>
+  </form>
+  {% if message %}
+    <div class="flash {{ 'ok' if ok else 'err' }}">{{ message }}</div>
+  {% endif %}
+  <p class="muted">The new password is stored as unsalted MD5, same as the old one.</p>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Index of /a02/files/ — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a02.home') }}">&larr; A02</a></p>{% endblock %}
+{% block content %}
+  <h1>Index of /a02/files/</h1>
+  <p class="sub">CWE-548 — autoindex left enabled over a deployment folder.</p>
+  <table>
+    <tr><th>Name</th><th>Size</th></tr>
+    {% for e in entries %}
+      <tr>
+        <td><a href="{{ url_for('a02.files_get', name=e.name) }}">{{ e.name }}</a></td>
+        <td>{{ e.size }} bytes</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

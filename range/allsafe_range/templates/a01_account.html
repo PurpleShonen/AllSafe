@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}A01 account {{ account_id }} — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a01.home') }}">&larr; A01</a></p>{% endblock %}
+{% block content %}
+  <h1>Account {{ account_id }}</h1>
+  {% if row %}
+    {% if mismatch %}
+      <div class="flash err">
+        This record belongs to user id {{ row['owner_user_id'] }}, not to you.
+        It was returned anyway. That is CWE-639.
+      </div>
+    {% endif %}
+    <table>
+      <tr><th>Client</th><td>{{ row['client_name'] }}</td></tr>
+      <tr><th>Contract</th><td>{{ row['contract_ref'] }}</td></tr>
+      <tr><th>Owner user id</th><td>{{ row['owner_user_id'] }}</td></tr>
+      <tr><th>Monthly value</th><td>{{ row['monthly_value'] }}</td></tr>
+      <tr><th>Billing email</th><td>{{ row['billing_email'] }}</td></tr>
+      <tr><th>Notes</th><td>{{ row['notes'] }}</td></tr>
+    </table>
+  {% else %}
+    <div class="flash err">No account with id {{ account_id }}.</div>
+  {% endif %}
+{% endblock %}

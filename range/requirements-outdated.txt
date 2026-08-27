@@ -1,0 +1,14 @@
+# ============================================================================
+#  A03 — Software Supply Chain Failures : DELIBERATELY VULNERABLE PIN
+# ============================================================================
+#  Install this ONLY to make the A03 SBOM finding light up:
+#      pip install -r requirements-outdated.txt
+#
+#  PyYAML 5.3.1 carries CVE-2020-14343 (CWE-502): yaml.full_load() on untrusted
+#  input allows arbitrary code execution. This application NEVER passes user
+#  input to a YAML parser, so the vulnerable code path is present but not
+#  reachable. The point is the dependency-scanner finding, not exploitation.
+#
+#  To return to a clean tree:  pip install -r requirements.txt
+# ============================================================================
+PyYAML==5.3.1

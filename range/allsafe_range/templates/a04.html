@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}A04 Cryptographic Failures — Allsafe Range{% endblock %}
+{% block crumb %}{% include "_crumb.html" %}{% endblock %}
+{% block content %}
+  {% include "_meta.html" %}
+
+  <h2>1. Password storage</h2>
+  <p class="muted">
+    Unsalted MD5. <a href="{{ url_for('a04.export') }}">/a04/export</a> returns the
+    whole user table, hashes included.
+  </p>
+  <pre>curl -s http://range.allsafe.local/a04/export | jq -r '.users[] | "\(.username):\(.password_md5)"' &gt; hashes.txt
+hashcat -m 0 -a 0 hashes.txt rockyou.txt</pre>
+
+  <h2>2. Password reset token</h2>
+  <p class="muted">
+    The token is <code>md5(email + unix_minute)</code>. No secret, no entropy,
+    and it is returned in the response body over plain HTTP.
+  </p>
+  <p><a class="btn" href="{{ url_for('a04.reset') }}">Request a reset token</a></p>
+
+  <h2>3. Hardcoded signing key</h2>
+  <p class="muted">CWE-798 — the session signing key is a literal in <code>config.py</code>:</p>
+  <pre>SECRET_KEY = "{{ secret_key }}"</pre>
+  <p class="muted">
+    Anyone holding the source can mint a session cookie for any user. Rotating
+    it is not enough on its own; it has to stop living in version control.
+  </p>
+
+  <div class="panel good">
+    <h3>What the logs should show</h3>
+    <ul class="muted">
+      <li><code>app.log</code> — <code>credential_material_exported</code> at CRITICAL</li>
+      <li><code>app.log</code> — <code>password_reset_token_issued</code> with the token itself</li>
+      <li><code>app.log</code> — <code>password_reset_completed</code> for an account the requester does not own</li>
+      <li>Detection idea: a reset issued and completed within seconds, from one IP, for an account that never signed in</li>
+    </ul>
+  </div>
+{% endblock %}

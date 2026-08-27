@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}A02 admin panel — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a02.home') }}">&larr; A02</a></p>{% endblock %}
+{% block content %}
+  <h1>Range Administration</h1>
+  <div class="flash ok">Signed in with the default administrative account.</div>
+
+  <h3>Runtime environment</h3>
+  <p class="muted">CWE-497 — internal configuration handed to whoever logged in.</p>
+  <table>
+    <tr><th>Variable</th><th>Value</th></tr>
+    {% for k, v in env.items() %}<tr><td>{{ k }}</td><td>{{ v }}</td></tr>{% endfor %}
+  </table>
+
+  <p><a class="btn" href="{{ url_for('a02.admin_logout') }}">Sign out</a></p>
+{% endblock %}

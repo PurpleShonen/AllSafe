@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}A04 password reset — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a04.home') }}">&larr; A04</a></p>{% endblock %}
+{% block content %}
+  <h1>Password reset</h1>
+  <p class="sub">Token scheme: <code>{{ scheme_hint }}</code></p>
+
+  <form method="post">
+    <label for="e">Account email</label>
+    <input type="text" id="e" name="email" value="{{ email }}" placeholder="j.ellis@northgate.example">
+    <button type="submit">Send reset token</button>
+  </form>
+
+  {% if error %}<div class="flash err">{{ error }}</div>{% endif %}
+
+  {% if token %}
+    <div class="flash ok">
+      Token issued: <code>{{ token }}</code><br>
+      Normally this would be emailed. Here it is in the response body, over HTTP.
+    </div>
+    <p><a class="btn" href="{{ url_for('a04.reset_confirm', token=token) }}">Use this token</a></p>
+  {% endif %}
+
+  <div class="panel">
+    <h3>Try it without asking</h3>
+    <pre>python3 -c 'import hashlib,time; print(hashlib.md5(f"admin@range.allsafe.local:{int(time.time()//60)}".encode()).hexdigest())'</pre>
+    <p class="muted">
+      Known email plus a clock is enough. Note the endpoint also confirms which
+      addresses exist, which makes the guessing cheaper still.
+    </p>
+  </div>
+{% endblock %}

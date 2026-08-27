@@ -1,0 +1,25 @@
+# Allsafe Range — disposable stack.
+#   docker compose up --build       # start
+#   docker compose down -v          # tear down INCLUDING data (fresh next time)
+#
+# Treat every running instance as throwaway. `down -v` wipes the volumes so the
+# next `up` is a clean seed. INTENTIONALLY VULNERABLE — isolated networks only.
+services:
+  range:
+    build: .
+    # Bind to loopback on the host by default so you don't accidentally expose
+    # the vulnerable app on all interfaces. On the isolated cloud VM where you
+    # WANT external scan traffic, change to "80:8080" (and front with Apache/TLS).
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - range-data:/var/lib/allsafe-range
+      - range-logs:/var/log/allsafe-range
+    environment:
+      RANGE_TRUST_PROXY: "1"
+      # RANGE_MODULE_A03: "0"   # disable individual modules here
+    restart: unless-stopped
+
+volumes:
+  range-data:
+  range-logs:

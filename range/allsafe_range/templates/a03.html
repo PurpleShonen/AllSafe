@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}A03 Supply Chain — Allsafe Range{% endblock %}
+{% block crumb %}{% include "_crumb.html" %}{% endblock %}
+{% block content %}
+  {% include "_meta.html" %}
+
+  <div class="panel bad">
+    <strong>Present, not reachable.</strong>
+    <p class="muted" style="margin:8px 0 0;">
+      The vulnerable pin is a real dependency in a real tree, and a scanner will
+      flag it. Nothing in this application feeds untrusted input to it. That
+      distinction — vulnerable component versus exploitable path — is the whole
+      lesson of this category.
+    </p>
+  </div>
+
+  <h2>Live SBOM</h2>
+  <p class="muted">
+    Read from the installed distributions, matched against a bundled advisory
+    table. Also available as <a href="{{ url_for('a03.sbom_json') }}">JSON</a>.
+  </p>
+
+  <table>
+    <tr><th>Package</th><th>Installed</th><th>Status</th><th>Findings</th></tr>
+    {% for row in rows %}
+      <tr>
+        <td>{{ row.package }}</td>
+        <td>{{ row.version or '—' }}</td>
+        <td>{% if row.status == 'VULNERABLE' %}<strong style="color:#f0a39c;">{{ row.status }}</strong>{% else %}{{ row.status }}{% endif %}</td>
+        <td>
+          {% if row.findings %}
+            {% for f in row.findings %}
+              <div style="margin-bottom:8px;">
+                <span class="tag cwe">{{ f.cwe }}</span><code>{{ f.id }}</code>
+                ({{ f.severity }}, fixed in {{ f.fixed_in }})<br>
+                <span class="muted">{{ f.summary }}</span><br>
+                <span class="muted">{{ f.note }}</span>
+              </div>
+            {% endfor %}
+          {% else %}<span class="muted">—</span>{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <h3>Making the finding appear</h3>
+  <pre>pip install -r requirements-outdated.txt   # pins PyYAML 5.3.1
+curl -s http://range.allsafe.local/a03/sbom.json | jq .vulnerable_components</pre>
+
+  <div class="panel good">
+    <h3>What the logs should show</h3>
+    <ul class="muted">
+      <li><code>app.log</code> — <code>sbom_exported</code> listing <code>vulnerable_components</code></li>
+      <li><code>access.log</code> — scanners pulling <code>/a03/sbom.json</code> repeatedly</li>
+    </ul>
+  </div>
+{% endblock %}

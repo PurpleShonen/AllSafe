@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}A05 stored XSS — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a05.home') }}">&larr; A05</a></p>{% endblock %}
+{% block content %}
+  <h1>Client feedback</h1>
+  <p class="sub">CWE-79 stored — messages are rendered with <code>|safe</code> for every later visitor.</p>
+  <form method="post">
+    <label for="a">Name</label>
+    <input type="text" id="a" name="author" placeholder="Priya M.">
+    <label for="m">Message</label>
+    <textarea id="m" name="message"></textarea>
+    <button type="submit">Post feedback</button>
+  </form>
+  <h3>Recent feedback</h3>
+  {% for r in rows %}
+    <div class="panel">
+      <strong>{{ r['author'] }}</strong> <span class="muted">{{ r['created_at'] }}</span>
+      {# |safe on purpose — this is the stored-XSS sink #}
+      <div>{{ r['message'] | safe }}</div>
+    </div>
+  {% endfor %}
+{% endblock %}

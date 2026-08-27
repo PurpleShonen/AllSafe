@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ========================= HEAD / META ========================= -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — Allsafe Cybersecurity</title>
+<meta name="description" content="The history, mission, and leadership team behind Allsafe Cybersecurity's security operations practice.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ========================= SITE HEADER ========================= -->
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Allsafe Cybersecurity — home">
+      <!-- Logo mark: navy disc, three stacked rack bars, accent status LEDs -->
+      <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <circle cx="32" cy="32" r="32" fill="#1b3a5c"/>
+        <g fill="#ffffff">
+          <rect x="16" y="17" width="32" height="9" rx="2"/>
+          <rect x="16" y="27.5" width="32" height="9" rx="2"/>
+          <rect x="16" y="38" width="32" height="9" rx="2"/>
+        </g>
+        <g fill="#2f8fd0">
+          <circle cx="21.5" cy="21.5" r="2.1"/><circle cx="21.5" cy="32" r="2.1"/><circle cx="21.5" cy="42.5" r="2.1"/>
+        </g>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Allsafe</span>
+        <span class="brand__sub">Cybersecurity</span>
+      </span>
+    </a>
+
+    <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav" id="primary-nav" aria-label="Primary">
+      <a href="services.html">Services</a>
+      <a href="about.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a href="contact.html">Contact</a>
+      <a class="btn btn--primary" href="portal/index.html">Client Portal</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ========================= PAGE BANNER ========================= -->
+  <section class="page-banner">
+    <div class="wrap">
+      <p class="crumbs"><a href="index.html">Home</a> &rsaquo; About</p>
+      <h1>About Allsafe</h1>
+      <p>We started as four analysts who were tired of writing reports nobody read.
+         The company has grown; that complaint still shapes how we work.</p>
+    </div>
+  </section>
+
+  <!-- ========================= HISTORY ========================= -->
+  <section class="section">
+    <div class="wrap">
+      <div class="grid grid--2" style="gap:56px; align-items:start;">
+        <div>
+          <p class="eyebrow">Our history</p>
+          <h2>Fifteen years of doing the unglamorous part properly</h2>
+          <p>
+            Allsafe was founded in 2011 by four incident responders who kept being called
+            in after the same avoidable failures — an unmonitored jump host, a service
+            account nobody owned, a backup that had not restored cleanly in two years. The
+            findings were never exotic. What was missing was somebody watching consistently
+            and telling the truth about coverage.
+          </p>
+          <p>
+            The first office was a rented floor in Wilmington with six desks and a
+            whiteboard of client log sources. We took on managed monitoring because clients
+            kept asking who would watch the alerts we had just spent a month tuning. That
+            practice is now the majority of the business.
+          </p>
+          <p>
+            Today we run a follow-the-sun SOC across two operations centres, keep an
+            offensive team that reports into the same technical leadership as the defenders,
+            and deliberately stay small enough that the person who wrote your detection
+            content can be pulled onto your incident call.
+          </p>
+        </div>
+
+        <!-- Timeline -->
+        <div>
+          <ol class="timeline">
+            <li><span class="timeline__year">2011</span>Founded in Wilmington, Delaware as a four-person incident response consultancy.</li>
+            <li><span class="timeline__year">2014</span>First managed monitoring client onboarded; the SOC practice is formalised.</li>
+            <li><span class="timeline__year">2017</span>Offensive security team established, reporting into the same technical leadership as detection engineering.</li>
+            <li><span class="timeline__year">2020</span>Second operations centre opens, giving genuine follow-the-sun analyst coverage.</li>
+            <li><span class="timeline__year">2023</span>Cloud detection practice launched after control-plane incidents overtake endpoint as the leading engagement driver.</li>
+            <li><span class="timeline__year">2025</span>180+ environments under continuous monitoring across finance, healthcare, logistics, and energy.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= MISSION ========================= -->
+  <section class="section section--navy">
+    <div class="wrap">
+      <div class="section-head section-head--center" style="margin-bottom:0;">
+        <p class="eyebrow">Mission</p>
+        <h2 style="font-size:1.85rem; line-height:1.4;">
+          To give organisations an honest, continuously maintained picture of what is
+          happening in their environment — and the people to act on it before an
+          incident becomes a disclosure.
+        </h2>
+        <p class="lede" style="margin-bottom:0;">
+          We measure ourselves on time to containment and on coverage we can evidence,
+          not on alert volume.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= OPERATING PRINCIPLES ========================= -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head section-head--center">
+        <p class="eyebrow">How we operate</p>
+        <h2>Three commitments we hold to</h2>
+      </div>
+      <div class="grid grid--3">
+        <article class="card">
+          <h3>Say what we cannot see</h3>
+          <p>Every monthly report names the log sources we are missing and the attack
+             techniques we would not currently catch. A coverage gap you know about is a
+             decision; one you do not know about is an incident in waiting.</p>
+        </article>
+        <article class="card">
+          <h3>Evidence over assertion</h3>
+          <p>Tickets close with the query, the raw events, and the action taken. If an
+             analyst cannot show why something was benign, it stays open and gets escalated.</p>
+        </article>
+        <article class="card">
+          <h3>One team, both sides</h3>
+          <p>Testers and defenders share leadership, tooling, and retrospectives. Findings
+             from an engagement become detection content within the same quarter.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= LEADERSHIP TEAM (placeholder people) ========================= -->
+  <section class="section section--alt">
+    <div class="wrap">
+      <div class="section-head section-head--center">
+        <p class="eyebrow">Leadership</p>
+        <h2>Who runs the practice</h2>
+        <p class="lede">Placeholder profiles for this environment — initials stand in for photography.</p>
+      </div>
+
+      <div class="grid grid--4">
+        <div class="person">
+          <div class="person__photo" aria-hidden="true">DO</div>
+          <div class="person__name">Dana Okonkwo</div>
+          <div class="person__role">Chief Executive Officer</div>
+        </div>
+        <div class="person">
+          <div class="person__photo" aria-hidden="true">MR</div>
+          <div class="person__name">Marcus Reyes</div>
+          <div class="person__role">Chief Technology Officer</div>
+        </div>
+        <div class="person">
+          <div class="person__photo" aria-hidden="true">PL</div>
+          <div class="person__name">Priya Lakhani</div>
+          <div class="person__role">Director, Security Operations</div>
+        </div>
+        <div class="person">
+          <div class="person__photo" aria-hidden="true">TB</div>
+          <div class="person__name">Tomas Berg</div>
+          <div class="person__role">Head of Offensive Security</div>
+        </div>
+        <div class="person">
+          <div class="person__photo" aria-hidden="true">AS</div>
+          <div class="person__name">Amara Sesay</div>
+          <div class="person__role">Head of Incident Response</div>
+        </div>
+        <div class="person">
+          <div class="person__photo" aria-hidden="true">JW</div>
+          <div class="person__name">Jonah Whitfield</div>
+          <div class="person__role">Director, Risk &amp; Compliance</div>
+        </div>
+        <div class="person">
+          <div class="person__photo" aria-hidden="true">HK</div>
+          <div class="person__name">Hana Kobayashi</div>
+          <div class="person__role">Principal Detection Engineer</div>
+        </div>
+        <div class="person">
+          <div class="person__photo" aria-hidden="true">EV</div>
+          <div class="person__name">Elena Varga</div>
+          <div class="person__role">Chief People Officer</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= CTA BANNER ========================= -->
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="cta">
+        <div>
+          <h2>Want to work with this team?</h2>
+          <p>We are hiring analysts, engineers, and responders across both operations centres.</p>
+        </div>
+        <div class="cta__actions"><a class="btn btn--onnavy" href="careers.html">See open roles</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========================= SITE FOOTER ========================= -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand" style="margin-bottom:14px;">
+          <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="32" fill="#2f8fd0"/>
+            <g fill="#ffffff"><rect x="16" y="17" width="32" height="9" rx="2"/><rect x="16" y="27.5" width="32" height="9" rx="2"/><rect x="16" y="38" width="32" height="9" rx="2"/></g>
+            <g fill="#12293f"><circle cx="21.5" cy="21.5" r="2.1"/><circle cx="21.5" cy="32" r="2.1"/><circle cx="21.5" cy="42.5" r="2.1"/></g>
+          </svg>
+          <span class="brand__text">
+            <span class="brand__name">Allsafe</span>
+            <span class="brand__sub">Cybersecurity</span>
+          </span>
+        </div>
+        <p style="max-width:30em;">
+          Security operations, offensive testing, and incident response for organisations
+          that have to show their working.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#mdr">Managed Detection &amp; Response</a></li>
+          <li><a href="services.html#pentest">Penetration Testing</a></li>
+          <li><a href="services.html#ir">Incident Response</a></li>
+          <li><a href="services.html#grc">Risk &amp; Compliance</a></li>
+          <li><a href="services.html#training">Awareness Training</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="portal/index.html">Client portal</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li>1400 Harbour Point Drive<br>Suite 900<br>Wilmington, DE 19801</li>
+          <li><a href="tel:+13025550142">+1 (302) 555-0142</a></li>
+          <li><a href="mailto:hello@allsafe.local">hello@allsafe.local</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; <span data-year>2026</span> Allsafe Cybersecurity. Fictional company — home-lab use only.</span>
+      <!-- Placeholder legal links: intentionally inert -->
+      <ul>
+        <li><a href="#" onclick="return false;">Privacy Policy</a></li>
+        <li><a href="#" onclick="return false;">Terms of Service</a></li>
+        <li><a href="#" onclick="return false;">Responsible Disclosure</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

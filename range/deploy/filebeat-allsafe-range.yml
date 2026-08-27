@@ -1,0 +1,54 @@
+# ============================================================================
+#  Filebeat input for Allsafe Range — ships the app's JSON logs AND Apache's
+#  own logs to the home-lab Wazuh/OpenSearch cluster.
+#  Merge these inputs into /etc/filebeat/filebeat.yml (or drop under
+#  filebeat.inputs). Wazuh can alternatively ingest these paths directly via
+#  the Wazuh agent's localfile config (see README-DEPLOYMENT for that variant).
+# ============================================================================
+filebeat.inputs:
+
+  # ---- App structured logs (already JSON, one object per line) -------------
+  - type: filestream
+    id: allsafe-range-app
+    paths:
+      - /var/log/allsafe-range/app.log
+    parsers:
+      - ndjson:
+          target: ""                # promote fields to the top level
+          add_error_key: true
+          overwrite_keys: true
+    fields:
+      log_source: allsafe-range-app
+    fields_under_root: true
+
+  - type: filestream
+    id: allsafe-range-access
+    paths:
+      - /var/log/allsafe-range/access.log
+    parsers:
+      - ndjson:
+          target: ""
+          add_error_key: true
+          overwrite_keys: true
+    fields:
+      log_source: allsafe-range-access
+    fields_under_root: true
+
+  # ---- Apache's own logs for the range vhost (edge view) -------------------
+  - type: filestream
+    id: allsafe-range-apache
+    paths:
+      - /var/log/apache2/range_access.log
+      - /var/log/apache2/range_error.log
+    fields:
+      log_source: allsafe-range-apache
+    fields_under_root: true
+
+# Point at your home-lab collector. If shipping over WireGuard, this is the
+# tunnel address of the Wazuh manager / Logstash, NOT a public IP.
+output.logstash:
+  hosts: ["10.66.0.1:5044"]
+
+# Or, if you run OpenSearch directly:
+# output.elasticsearch:
+#   hosts: ["https://10.66.0.1:9200"]
