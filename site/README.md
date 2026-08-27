@@ -137,7 +137,8 @@ Nothing else in the site changes. Full detail in `portal/README.md`.
 
 ## Logs
 
-Both files should be picked up by the Wazuh agent on this host:
+Both files should be picked up by the Splunk Universal Forwarder on WEB01 and
+sent to SPLUNK01:
 
 | File | Contents |
 |---|---|

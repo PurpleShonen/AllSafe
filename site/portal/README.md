@@ -127,7 +127,8 @@ The stub skips all of this on purpose. A real deployment needs:
   reading the attributes it needs, and a password sourced from outside the
   config file (`exec:` above, or a systemd credential).
 - **Lockout and rate limiting**, at the backend rather than in the browser.
-- **Logging of failed binds** to somewhere Wazuh reads — the marketing site's
-  Apache access log will show the `401`s, but the reason lives in the backend.
+- **Logging of failed binds** to somewhere the Splunk UF reads — the marketing
+  site's Apache access log will show the `401`s, but the reason lives in the
+  backend.
 - **Generic failure messages.** `login.cgi` already returns the same text for an
   unknown username and a wrong password; keep that property.
