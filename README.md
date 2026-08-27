@@ -74,7 +74,7 @@ AllSafe/
 
 ---
 
-## 🏢 APP 1 — Allsafe Cybersecurity
+## APP 1 — Allsafe Cybersecurity
 
 A buttoned-up B2B security-vendor site — the kind of surface a red team would recon
 and a blue team would monitor. Static files, **no build step**, single stylesheet,
@@ -94,12 +94,12 @@ inline-SVG logo, mobile-responsive.
 python3 -m http.server 8000 --directory site
 ```
 
-📄 **[`site/README.md`](site/README.md)** — file structure, Apache deploy steps,
+**[`site/README.md`](site/README.md)** — file structure, Apache deploy steps,
 `www-data` permissions, and the portal → LDAP swap guide.
 
 ---
 
-## 🎯 APP 2 — Allsafe Range
+## APP 2 — Allsafe Range
 
 One deliberately vulnerable endpoint group per **OWASP Top 10:2025** category — each
 individually toggleable, each logging **structured JSON** for Wazuh. **The logs are the
@@ -147,7 +147,7 @@ docker compose down -v               # wipe everything, fresh next time
 > and A07 brute forces light up, assumes coverage is complete, and misses this one. Diff
 > the two to find it — presence in the HTTP log is *not* the same as security-event coverage.
 
-📄 **[`range/README.md`](range/README.md)** — full endpoint → OWASP → CWE → *"what the SOC
+**[`range/README.md`](range/README.md)** — full endpoint → OWASP → CWE → *"what the SOC
 should see"* table · **[`range/deploy/DEPLOYMENT.md`](range/deploy/DEPLOYMENT.md)** —
 systemd/gunicorn behind Apache, VM firewalling, and shipping logs home over WireGuard.
 
@@ -158,13 +158,13 @@ systemd/gunicorn behind Apache, VM firewalling, and shipping logs home over Wire
 The range demonstrates each weakness **only as far as needed to produce a realistic log
 signal** — not to build a working attack platform:
 
-- ❌ **No arbitrary code execution.** The Werkzeug interactive debugger is never enabled;
+- **No arbitrary code execution.** The Werkzeug interactive debugger is never enabled;
   A02 shows a *rendered* traceback instead.
-- 📦 **A03**'s vulnerable dependency is *present but unreachable* — no untrusted input
+- **A03**'s vulnerable dependency is *present but unreachable* — no untrusted input
   reaches a parser. The finding is the SBOM entry, not exploitation.
-- 📤 **A08** stores and hashes uploads but never executes, unpacks, or interprets them.
-- 🚫 **No reverse shells, no C2, nothing aimed at third parties.**
-- 🛡️ The **cloud-metadata guard rail** (A01 SSRF) is on by default, so a public-VM
+- **A08** stores and hashes uploads but never executes, unpacks, or interprets them.
+- **No reverse shells, no C2, nothing aimed at third parties.**
+- The **cloud-metadata guard rail** (A01 SSRF) is on by default, so a public-VM
   deployment can't be pivoted into credential theft with one request.
 
 The goal is realistic logs, not a functioning botnet node.
