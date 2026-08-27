@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}A10 download — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a10.home') }}">&larr; A10</a></p>{% endblock %}
+{% block content %}
+  <h1>{{ doc_id }}</h1>
+  <p class="sub">clearance token: <code>{{ token }}</code> &middot; required level {{ required }}</p>
+
+  {% if failed_open %}
+    <div class="flash err">Access GRANTED because the clearance check threw. That is CWE-636 — failing open.</div>
+  {% elif granted %}
+    <div class="flash ok">Access granted legitimately.</div>
+  {% else %}
+    <div class="flash err">Access denied.</div>
+  {% endif %}
+
+  <p class="muted">{{ reason }}</p>
+  {% if body %}<pre>{{ body }}</pre>{% endif %}
+{% endblock %}

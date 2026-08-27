@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}A08 Integrity Failures — Allsafe Range{% endblock %}
+{% block crumb %}{% include "_crumb.html" %}{% endblock %}
+{% block content %}
+  {% include "_meta.html" %}
+  {% if error %}<div class="flash err">{{ error }}</div>{% endif %}
+
+  <h2>1. Upload with unverified integrity</h2>
+  <p class="muted">
+    Provide a file and a claimed SHA-256. The server records the claim, computes
+    the real hash, and stores the file regardless of whether they match.
+  </p>
+  <form action="{{ url_for('a08.upload') }}" method="post" enctype="multipart/form-data">
+    <label for="f">Artifact</label>
+    <input type="file" id="f" name="artifact">
+    <label for="h">Claimed SHA-256 (put anything — it is not enforced)</label>
+    <input type="text" id="h" name="sha256" placeholder="deadbeef... (a lie is accepted)">
+    <button type="submit">Upload</button>
+  </form>
+
+  <h2>2. Unsigned update manifest</h2>
+  <p class="muted">CWE-494 — an update feed with no signature and no published hash.</p>
+  <p><a class="btn" href="{{ url_for('a08.update') }}">GET /a08/update</a></p>
+
+  <h3>Recent uploads</h3>
+  <table>
+    <tr><th>Filename</th><th>Claimed</th><th>Actual</th><th>Match?</th><th>Size</th></tr>
+    {% for u in uploads %}
+      <tr>
+        <td>{{ u['filename'] }}</td>
+        <td class="muted">{{ (u['claimed_sha256'] or '—')[:16] }}</td>
+        <td class="muted">{{ u['actual_sha256'][:16] }}</td>
+        <td>{% if u['claimed_sha256'] and u['claimed_sha256'] != u['actual_sha256'] %}<span style="color:#f0a39c;">NO — stored anyway</span>{% else %}yes{% endif %}</td>
+        <td>{{ u['size_bytes'] }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <div class="panel good">
+    <h3>What the logs should show</h3>
+    <ul class="muted">
+      <li><code>app.log</code> — <code>artifact_accepted_without_verification</code> with <code>hash_matches: false</code></li>
+      <li><code>app.log</code> — <code>unsigned_update_manifest_served</code> with <code>signed: false</code></li>
+    </ul>
+  </div>
+{% endblock %}

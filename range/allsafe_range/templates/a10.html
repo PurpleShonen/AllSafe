@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}A10 Exceptional Conditions — Allsafe Range{% endblock %}
+{% block crumb %}{% include "_crumb.html" %}{% endblock %}
+{% block content %}
+  {% include "_meta.html" %}
+  {% if error %}<div class="flash err">{{ error }}</div>{% endif %}
+
+  <h2>Clearance-gated download</h2>
+  <p class="muted">
+    Access needs a clearance token like <code>level:2</code>. A well-formed token
+    below your level is denied. A <em>malformed</em> token makes the check throw —
+    and the handler grants access when that happens.
+  </p>
+
+  <table>
+    <tr><th>Document</th><th>Required level</th><th>Honest attempt</th></tr>
+    {% for doc_id, doc in documents.items() %}
+      <tr>
+        <td><code>{{ doc_id }}</code></td>
+        <td>{{ doc.required_level }}</td>
+        <td><a href="{{ url_for('a10.download', doc=doc_id, clearance='level:0') }}">try with level:0</a></td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <div class="panel bad">
+    <h3>The exploit</h3>
+    <pre>{{ url_for('a10.download', doc='board-minutes', clearance='level:4') }}   # denied unless you really are level 4
+{{ url_for('a10.download', doc='board-minutes', clearance='banana') }}    # malformed -> check throws -> GRANTED</pre>
+  </div>
+
+  <div class="panel good">
+    <h3>What the logs should show</h3>
+    <ul class="muted">
+      <li><code>app.log</code> — <code>authz_decision</code> for well-formed tokens (granted/denied)</li>
+      <li><code>app.log</code> — <code>authz_failed_open</code> at CRITICAL when a malformed token grants access</li>
+      <li>Detection idea: a malformed <code>clearance</code> parameter immediately followed by access to a high-level doc</li>
+    </ul>
+  </div>
+{% endblock %}

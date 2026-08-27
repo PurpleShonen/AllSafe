@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}A01 Broken Access Control — Allsafe Range{% endblock %}
+{% block crumb %}{% include "_crumb.html" %}{% endblock %}
+{% block content %}
+  {% include "_meta.html" %}
+
+  <div class="panel">
+    You are treated as <code>{{ me }}</code> (user id <code>{{ my_id }}</code>).
+    Nothing verified that. There is no login on this module — the session id is
+    simply handed out on first visit, which is the first thing to notice.
+  </div>
+
+  <h2>1. Account records — IDOR</h2>
+  <p class="muted">Accounts that belong to your session user:</p>
+  <table>
+    <tr><th>id</th><th>client</th><th>contract</th><th>monthly</th></tr>
+    {% for row in mine %}
+      <tr>
+        <td><a href="{{ url_for('a01.account', id=row['id']) }}">{{ row['id'] }}</a></td>
+        <td>{{ row['client_name'] }}</td>
+        <td>{{ row['contract_ref'] }}</td>
+        <td>{{ row['monthly_value'] }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  <p class="muted">Account ids are sequential and the lookup never checks ownership.</p>
+  <form action="{{ url_for('a01.account') }}" method="get">
+    <label for="acct">Look up an account id</label>
+    <input type="text" id="acct" name="id" value="1001">
+    <button type="submit">Fetch account</button>
+  </form>
+
+  <h2>2. Reports — client-supplied role</h2>
+  <p class="muted">The <code>role</code> parameter decides what comes back. The client sets it.</p>
+  <p>
+    <a class="btn" href="{{ url_for('a01.reports', role='client') }}">View as client</a>
+    &nbsp;<a class="btn" href="{{ url_for('a01.reports', role='admin') }}">View as admin</a>
+  </p>
+
+  <h2>3. Status-page fetcher — SSRF</h2>
+  <p class="muted">
+    "Check whether a client's status page is up." Any URL, any scheme urllib
+    supports, no allow-list.
+  </p>
+  <p><a class="btn" href="{{ url_for('a01.fetch') }}">Open the fetcher</a></p>
+
+  <div class="panel good">
+    <h3>What the logs should show</h3>
+    <ul class="muted">
+      <li><code>access.log</code> — sequential <code>GET /a01/account?id=</code> values from one source IP</li>
+      <li><code>app.log</code> — <code>account_access</code> with <code>cross_tenant: true</code></li>
+      <li><code>app.log</code> — <code>privileged_view_via_parameter</code> with <code>claimed_role: admin</code></li>
+      <li><code>app.log</code> — <code>ssrf_fetch_requested</code> / <code>ssrf_metadata_blocked</code></li>
+    </ul>
+  </div>
+{% endblock %}

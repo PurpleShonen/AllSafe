@@ -1,0 +1,38 @@
+{# Shared chrome for every Range page. The red bar is not decorative. #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Allsafe Range{% endblock %}</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="{{ url_for('static', filename='range.css') }}">
+</head>
+<body>
+
+<div class="warn-bar">
+  INTENTIONALLY VULNERABLE TRAINING APPLICATION — ISOLATED LAB USE ONLY — NEVER CONNECT TO PRODUCTION DATA
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="{{ url_for('index') }}">allsafe<span>-range</span></a>
+    <span class="ver">v{{ config.APP_VERSION }} &middot; logs: {{ config.LOG_DIR }}</span>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    {% block crumb %}{% endblock %}
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    Allsafe Range &middot; fictional training target &middot; every request on this host is
+    logged to <code>{{ config.LOG_DIR }}/access.log</code>
+  </div>
+</footer>
+</body>
+</html>

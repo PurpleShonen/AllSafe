@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}A08 upload result — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a08.home') }}">&larr; A08</a></p>{% endblock %}
+{% block content %}
+  <h1>Upload accepted</h1>
+  <div class="flash {{ 'ok' if integrity_ok else 'err' }}">
+    {% if claimed and not integrity_ok %}
+      Claimed hash does NOT match the stored file — and it was accepted anyway.
+    {% else %}
+      Stored. No claim to contradict.
+    {% endif %}
+  </div>
+  <table>
+    <tr><th>Filename</th><td>{{ filename }}</td></tr>
+    <tr><th>Size</th><td>{{ size }} bytes</td></tr>
+    <tr><th>Claimed SHA-256</th><td class="muted">{{ claimed or '—' }}</td></tr>
+    <tr><th>Actual SHA-256</th><td class="muted">{{ actual }}</td></tr>
+  </table>
+  <p class="muted">The file was stored and hashed. It was not executed, unpacked, or interpreted.</p>
+{% endblock %}

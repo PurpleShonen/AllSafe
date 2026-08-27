@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ========================= HEAD / META ========================= -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Allsafe Cybersecurity</title>
+<meta name="description" content="Contact Allsafe Cybersecurity: incident response line, general enquiries, and office locations.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ========================= SITE HEADER ========================= -->
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Allsafe Cybersecurity — home">
+      <!-- Logo mark: navy disc, three stacked rack bars, accent status LEDs -->
+      <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <circle cx="32" cy="32" r="32" fill="#1b3a5c"/>
+        <g fill="#ffffff">
+          <rect x="16" y="17" width="32" height="9" rx="2"/>
+          <rect x="16" y="27.5" width="32" height="9" rx="2"/>
+          <rect x="16" y="38" width="32" height="9" rx="2"/>
+        </g>
+        <g fill="#2f8fd0">
+          <circle cx="21.5" cy="21.5" r="2.1"/><circle cx="21.5" cy="32" r="2.1"/><circle cx="21.5" cy="42.5" r="2.1"/>
+        </g>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Allsafe</span>
+        <span class="brand__sub">Cybersecurity</span>
+      </span>
+    </a>
+
+    <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav" id="primary-nav" aria-label="Primary">
+      <a href="services.html">Services</a>
+      <a href="about.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a href="contact.html">Contact</a>
+      <a class="btn btn--primary" href="portal/index.html">Client Portal</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ========================= PAGE BANNER ========================= -->
+  <section class="page-banner">
+    <div class="wrap">
+      <p class="crumbs"><a href="index.html">Home</a> &rsaquo; Contact</p>
+      <h1>Contact us</h1>
+      <p>For an active incident, call the response line — do not use this form.
+         For everything else, tell us roughly what you are dealing with and we will
+         put the right practitioner on the call.</p>
+    </div>
+  </section>
+
+  <!-- ========================= FORM + OFFICE DETAILS ========================= -->
+  <section class="section">
+    <div class="wrap">
+      <div class="grid grid--2" style="gap:56px; align-items:start;">
+
+        <!-- ---- Contact form (intentionally non-functional: no backend) ---- -->
+        <div>
+          <p class="eyebrow">Send an enquiry</p>
+          <h2>Tell us what you need</h2>
+
+          <p class="form-note" style="margin-bottom:26px;">
+            <strong>Demonstration form.</strong> This site is served as static files and has
+            no mail backend — nothing is transmitted or stored when you submit.
+          </p>
+
+          <form id="contact-form" novalidate>
+            <div class="grid grid--2" style="gap:0 18px;">
+              <div class="field">
+                <label for="cf-name">Full name</label>
+                <input type="text" id="cf-name" name="name" autocomplete="name" placeholder="Jordan Ellis">
+              </div>
+              <div class="field">
+                <label for="cf-company">Organisation</label>
+                <input type="text" id="cf-company" name="company" autocomplete="organization" placeholder="Northgate Financial">
+              </div>
+            </div>
+
+            <div class="grid grid--2" style="gap:0 18px;">
+              <div class="field">
+                <label for="cf-email">Work email</label>
+                <input type="email" id="cf-email" name="email" autocomplete="email" placeholder="jordan.ellis@example.com">
+              </div>
+              <div class="field">
+                <label for="cf-phone">Phone <span style="font-weight:400;color:var(--gray);">(optional)</span></label>
+                <input type="tel" id="cf-phone" name="phone" autocomplete="tel" placeholder="+1 302 555 0100">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="cf-interest">What is this about?</label>
+              <select id="cf-interest" name="interest">
+                <option value="">Select an area</option>
+                <option value="mdr">Managed Detection &amp; Response</option>
+                <option value="pentest">Penetration Testing</option>
+                <option value="ir">Incident Response retainer</option>
+                <option value="grc">Risk &amp; Compliance Advisory</option>
+                <option value="training">Security Awareness Training</option>
+                <option value="careers">Careers / open application</option>
+                <option value="other">Something else</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="cf-message">Message</label>
+              <textarea id="cf-message" name="message" placeholder="A couple of lines on your environment, your timeline, and what prompted the enquiry."></textarea>
+              <p class="field__hint">Please do not include credentials, personal data, or live incident detail in this form.</p>
+            </div>
+
+            <div class="field">
+              <label style="font-weight:400; font-family:var(--font-body); font-size:.92rem; color:var(--gray-dark);">
+                <input type="checkbox" name="consent" style="width:auto; margin-right:8px; vertical-align:middle;">
+                I agree to be contacted about this enquiry.
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn--primary">Send enquiry</button>
+
+            <!-- Populated on submit; the form never leaves the browser -->
+            <div id="cf-result" class="portal-result" hidden role="status" aria-live="polite"></div>
+          </form>
+        </div>
+
+        <!-- ---- Office and direct contact details ---- -->
+        <div class="contact-panel">
+          <p class="eyebrow">Direct lines</p>
+          <h3 style="margin-bottom:1em;">Reach us</h3>
+          <dl>
+            <dt>Incident response line — 24/7</dt>
+            <dd><a href="tel:+13025550199">+1 (302) 555-0199</a><br>Retainer clients: use the number in your runbook.</dd>
+
+            <dt>General enquiries</dt>
+            <dd><a href="tel:+13025550142">+1 (302) 555-0142</a><br><a href="mailto:hello@allsafe.local">hello@allsafe.local</a></dd>
+
+            <dt>Head office</dt>
+            <dd>Allsafe Cybersecurity<br>1400 Harbour Point Drive, Suite 900<br>Wilmington, DE 19801<br>United States</dd>
+
+            <dt>Operations centre — EMEA</dt>
+            <dd>Rua do Alecrim 42, 3.&ordm; andar<br>1200-018 Lisbon<br>Portugal</dd>
+
+            <dt>Office hours</dt>
+            <dd>Monday to Friday, 08:00–18:00 local time.<br>Monitoring and response operate continuously.</dd>
+
+            <dt>Responsible disclosure</dt>
+            <dd>Found a security issue in our own estate? Email
+                <a href="mailto:security@allsafe.local">security@allsafe.local</a>.</dd>
+          </dl>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Non-functional submit handler: shows a notice, sends nothing -->
+  <script>
+  (function () {
+    var form = document.getElementById('contact-form');
+    var out = document.getElementById('cf-result');
+    if (!form || !out) { return; }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      out.hidden = false;
+      out.className = 'portal-result portal-result--granted';
+      out.innerHTML = '<strong>Nothing was sent.</strong>' +
+        'This is a demonstration form with no backend. In a wired-up deployment ' +
+        'this is where the submission confirmation would appear.';
+      out.scrollIntoView({ block: 'nearest' });
+    });
+  })();
+  </script>
+</main>
+
+<!-- ========================= SITE FOOTER ========================= -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand" style="margin-bottom:14px;">
+          <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="32" fill="#2f8fd0"/>
+            <g fill="#ffffff"><rect x="16" y="17" width="32" height="9" rx="2"/><rect x="16" y="27.5" width="32" height="9" rx="2"/><rect x="16" y="38" width="32" height="9" rx="2"/></g>
+            <g fill="#12293f"><circle cx="21.5" cy="21.5" r="2.1"/><circle cx="21.5" cy="32" r="2.1"/><circle cx="21.5" cy="42.5" r="2.1"/></g>
+          </svg>
+          <span class="brand__text">
+            <span class="brand__name">Allsafe</span>
+            <span class="brand__sub">Cybersecurity</span>
+          </span>
+        </div>
+        <p style="max-width:30em;">
+          Security operations, offensive testing, and incident response for organisations
+          that have to show their working.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#mdr">Managed Detection &amp; Response</a></li>
+          <li><a href="services.html#pentest">Penetration Testing</a></li>
+          <li><a href="services.html#ir">Incident Response</a></li>
+          <li><a href="services.html#grc">Risk &amp; Compliance</a></li>
+          <li><a href="services.html#training">Awareness Training</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="portal/index.html">Client portal</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li>1400 Harbour Point Drive<br>Suite 900<br>Wilmington, DE 19801</li>
+          <li><a href="tel:+13025550142">+1 (302) 555-0142</a></li>
+          <li><a href="mailto:hello@allsafe.local">hello@allsafe.local</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; <span data-year>2026</span> Allsafe Cybersecurity. Fictional company — home-lab use only.</span>
+      <!-- Placeholder legal links: intentionally inert -->
+      <ul>
+        <li><a href="#" onclick="return false;">Privacy Policy</a></li>
+        <li><a href="#" onclick="return false;">Terms of Service</a></li>
+        <li><a href="#" onclick="return false;">Responsible Disclosure</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

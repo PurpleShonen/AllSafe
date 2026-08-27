@@ -1,0 +1,3 @@
+# Test/lint tooling for working on the range itself.
+-r requirements.txt
+pytest>=8.0

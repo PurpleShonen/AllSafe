@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}A07 Authentication Failures — Allsafe Range{% endblock %}
+{% block crumb %}{% include "_crumb.html" %}{% endblock %}
+{% block content %}
+  {% include "_meta.html" %}
+  {% if who %}<div class="flash ok">Signed in as <code>{{ who }}</code>. This session will not expire.</div>{% endif %}
+
+  <h2>1. Login with no lockout</h2>
+  <p class="muted">Unlimited attempts. Failed logins are logged, but nothing throttles them.</p>
+  <p><a class="btn" href="{{ url_for('a07.login') }}">Login</a></p>
+  <pre>for p in $(cat rockyou-top100.txt); do
+  curl -s -o /dev/null -w "%{http_code} $p\n" -d "username=admin&password=$p" \
+    http://range.allsafe.local/a07/login
+done</pre>
+
+  <h2>2. Registration with no password policy</h2>
+  <p class="muted">A one-character password is accepted.</p>
+  <p><a class="btn" href="{{ url_for('a07.register') }}">Register</a></p>
+
+  <h2>3. Sessions that never expire</h2>
+  <p class="muted">Ten-year lifetime, cookie not HttpOnly. Pair it with the A05 XSS.</p>
+  <p><a class="btn" href="{{ url_for('a07.whoami') }}">Inspect session</a></p>
+
+  <div class="panel good">
+    <h3>What the logs should show</h3>
+    <ul class="muted">
+      <li><code>app.log</code> — a burst of <code>auth_login_failed</code> for one username from one IP</li>
+      <li>Detection idea: N failures in M seconds, then a <code>auth_login_success</code> — classic brute-force success</li>
+      <li><code>app.log</code> — <code>weak_password_accepted</code> with a tiny <code>password_length</code></li>
+    </ul>
+  </div>
+{% endblock %}

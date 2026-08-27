@@ -1,0 +1,10 @@
+.venv/
+data/
+logs/
+logs-test/
+*.db
+*.db-wal
+*.db-shm
+__pycache__/
+*.pyc
+uploads/

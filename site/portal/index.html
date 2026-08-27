@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ========================= HEAD / META =========================
+     Client Portal — isolated component.
+     The only coupling to the marketing site is the shared stylesheet and the
+     logo mark. Everything auth-related lives in this folder.
+     ============================================================== -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Client Portal — Allsafe Cybersecurity</title>
+<meta name="description" content="Allsafe Cybersecurity client portal sign-in.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<div class="portal-page">
+
+  <!-- ========================= LEFT: BRAND PANEL ========================= -->
+  <aside class="portal-aside">
+    <div>
+      <a class="brand" href="../index.html" style="margin-bottom:44px;">
+        <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="32" fill="#2f8fd0"/>
+          <g fill="#ffffff"><rect x="16" y="17" width="32" height="9" rx="2"/><rect x="16" y="27.5" width="32" height="9" rx="2"/><rect x="16" y="38" width="32" height="9" rx="2"/></g>
+          <g fill="#12293f"><circle cx="21.5" cy="21.5" r="2.1"/><circle cx="21.5" cy="32" r="2.1"/><circle cx="21.5" cy="42.5" r="2.1"/></g>
+        </svg>
+        <span class="brand__text">
+          <span class="brand__name" style="color:#fff;">Allsafe</span>
+          <span class="brand__sub" style="color:#8fb4d0;">Cybersecurity</span>
+        </span>
+      </a>
+
+      <h2>The same record your auditors will ask for.</h2>
+      <ul class="checklist">
+        <li>Live triage queue with the evidence behind every verdict</li>
+        <li>Monthly detection coverage and log-source health reports</li>
+        <li>Engagement reports, retest status, and remediation tracking</li>
+        <li>Incident timelines and post-incident reviews</li>
+      </ul>
+    </div>
+
+    <p style="font-size:.85rem; color:#8fa5b8; margin:0;">
+      Access is restricted to named contacts under an active service agreement.
+      Trouble signing in? Call your lead analyst or
+      <a href="../contact.html" style="color:#b9d4e8;">contact us</a>.
+    </p>
+  </aside>
+
+  <!-- ========================= RIGHT: SIGN-IN CARD ========================= -->
+  <main class="portal-main">
+    <div class="portal-card">
+      <h1>Client sign-in</h1>
+      <p class="portal-card__sub">Use the credentials issued with your service agreement.</p>
+
+      <!--
+        The form posts to a single configurable endpoint (see auth-config.js).
+        No assumption is made here about how that endpoint validates the
+        credentials — stub, LDAP bind, SSO broker, or anything else.
+      -->
+      <form id="portal-login" novalidate autocomplete="on">
+        <div class="field">
+          <label for="pf-username">Username</label>
+          <input type="text" id="pf-username" name="username" autocomplete="username"
+                 autocapitalize="none" spellcheck="false" required
+                 placeholder="firstname.lastname">
+          <p class="field__hint">Your directory username, without the domain prefix.</p>
+        </div>
+
+        <div class="field">
+          <label for="pf-password">Password</label>
+          <input type="password" id="pf-password" name="password"
+                 autocomplete="current-password" required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--block" id="pf-submit">Sign in</button>
+
+        <!-- Verdict panel: filled in by portal.js from the endpoint response -->
+        <div id="pf-result" class="portal-result" hidden role="status" aria-live="polite"></div>
+      </form>
+
+      <div class="portal-foot">
+        <a href="#" onclick="return false;">Forgotten your password?</a> &nbsp;&middot;&nbsp;
+        <a href="../index.html">Back to allsafe.local</a>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<!-- Auth seam: config first, then the transport-agnostic form controller -->
+<script src="auth-config.js"></script>
+<script src="portal.js"></script>
+</body>
+</html>

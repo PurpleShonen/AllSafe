@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Allsafe server-rack mark: navy disc with three stacked bars + status LEDs -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Allsafe">
+  <circle cx="32" cy="32" r="32" fill="#1b3a5c"/>
+  <g fill="#ffffff">
+    <rect x="16" y="17" width="32" height="9" rx="2"/>
+    <rect x="16" y="27.5" width="32" height="9" rx="2"/>
+    <rect x="16" y="38" width="32" height="9" rx="2"/>
+  </g>
+  <g fill="#2f8fd0">
+    <circle cx="21.5" cy="21.5" r="2.1"/>
+    <circle cx="21.5" cy="32" r="2.1"/>
+    <circle cx="21.5" cy="42.5" r="2.1"/>
+  </g>
+</svg>

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Allsafe Range — module index{% endblock %}
+{% block content %}
+  <h1>Allsafe Range</h1>
+  <p class="sub">
+    One deliberately vulnerable endpoint group per OWASP Top 10:2025 category.
+    Every module can be switched on or off independently with
+    <code>RANGE_MODULE_A0n=0</code>.
+  </p>
+
+  <div class="panel">
+    <strong>The point of this app is the logs, not the bugs.</strong>
+    <p class="muted" style="margin:8px 0 0;">
+      Exploit something, then go and read
+      <code>{{ config.LOG_DIR }}/access.log</code> and
+      <code>{{ config.LOG_DIR }}/app.log</code> and work out what a detection
+      rule for it would look like. One module is a deliberate logging blind
+      spot; finding it is part of the exercise.
+    </p>
+  </div>
+
+  <h2>Modules</h2>
+  <ul class="mods">
+    {% for key, title, _mod in all_modules %}
+      {% set live = modules | selectattr('key', 'equalto', key) | list | first %}
+      <li class="{{ '' if live else 'off' }}">
+        <span class="k">{{ key | upper }}</span>
+        {% if live %}
+          <a href="{{ url_for(key + '.home') }}"><strong>{{ title }}</strong></a>
+          {% for cwe in live.meta.cwe %}<span class="tag cwe">{{ cwe }}</span>{% endfor %}
+          <div class="desc">{{ live.meta.summary }}</div>
+        {% else %}
+          <strong>{{ title }}</strong>
+          <span class="tag">disabled</span>
+          <div class="desc">Set <code>RANGE_MODULE_{{ key | upper }}=1</code> to enable.</div>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}500 — Allsafe Range{% endblock %}
+{% block content %}
+  <h1>Internal Server Error</h1>
+  <p class="sub">Something threw and nothing caught it.</p>
+
+  {#
+    A02 Security Misconfiguration (CWE-209 / CWE-497): the traceback is
+    rendered straight to the client, source paths and all. Werkzeug's
+    interactive debugger is deliberately NOT enabled — that would be a live
+    Python console, i.e. real RCE, which is out of scope for this range.
+  #}
+  <div class="panel bad">
+    <h3>Traceback (shown on purpose — A02)</h3>
+    <pre>{{ traceback_text }}</pre>
+  </div>
+
+  <p class="muted">
+    The same traceback was written to <code>{{ config.LOG_DIR }}/app.log</code>
+    as an <code>unhandled_exception</code> event.
+  </p>
+{% endblock %}

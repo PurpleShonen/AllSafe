@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}A05 login — Allsafe Range{% endblock %}
+{% block crumb %}<p class="crumb"><a href="{{ url_for('a05.home') }}">&larr; A05</a></p>{% endblock %}
+{% block content %}
+  <h1>Login (injectable)</h1>
+  <form method="post">
+    <label for="u">Username</label>
+    <input type="text" id="u" name="username" value="{{ username }}" autocomplete="off">
+    <label for="p">Password</label>
+    <input type="password" id="p" name="password" autocomplete="off">
+    <button type="submit">Sign in</button>
+  </form>
+  {% if result %}
+    <div class="flash ok">Authenticated as <code>{{ result.username }}</code> (role {{ result.role }}).</div>
+  {% endif %}
+  {% if executed %}<h3>Executed SQL</h3><pre>{{ executed }}</pre>{% endif %}
+  <div class="panel"><h3>Try</h3><pre>username: ' OR '1'='1' --
+password: (anything)</pre></div>
+{% endblock %}
