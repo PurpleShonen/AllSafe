@@ -2,7 +2,7 @@
 
 A deliberately vulnerable Flask application for SOC / blue-team training. One
 endpoint group per **OWASP Top 10:2025** category, each individually
-enable/disable-able, each emitting structured JSON logs designed for Wazuh
+enable/disable-able, each emitting structured JSON logs designed for Splunk
 ingestion.
 
 > ⚠️ **Read [`README-WARNING.md`](README-WARNING.md) before running anything.**
@@ -104,7 +104,8 @@ range/
     ├── range.allsafe.local.conf    Apache reverse-proxy vhost (separate file!)
     ├── allsafe-range.service       systemd unit
     ├── gunicorn.conf.py
-    ├── filebeat-allsafe-range.yml  ship app + Apache logs to Wazuh
+    ├── splunk-inputs.conf          ship app + Apache logs to SPLUNK01 (default)
+    ├── filebeat-allsafe-range.yml  alternative shipper: Elastic/OpenSearch/Wazuh
     └── rsyslog-allsafe-range.conf  rsyslog alternative
 ```
 
@@ -162,7 +163,7 @@ in the HTTP log is not the same as security-event coverage.**
 
 ## Where the logs land
 
-| File | What | Wazuh should ingest? |
+| File | What | Splunk should ingest? |
 |---|---|---|
 | `/var/log/allsafe-range/access.log` | Every request as JSON | ✅ (app view: parsed params, `suspected` tags) |
 | `/var/log/allsafe-range/app.log` | Security events as JSON | ✅ (the interesting events) |
@@ -205,5 +206,5 @@ The goal is realistic logs, not a functioning botnet node.
 ## Deployment
 
 See [`deploy/DEPLOYMENT.md`](deploy/DEPLOYMENT.md) for the full walkthrough:
-systemd + gunicorn behind Apache, firewalling the isolated cloud VM down to
-80/443, and forwarding logs back to the home-lab Wazuh instance over WireGuard.
+systemd + gunicorn behind Apache on WEB01, firewalling the VM down to 80/443,
+and forwarding logs to SPLUNK01 with the Splunk Universal Forwarder.

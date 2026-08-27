@@ -5,7 +5,7 @@
 **A home-lab SOC target environment for the `allsafe.local` domain.**
 
 Two companion apps: a polished (fictional) security-vendor marketing site, and an
-intentionally vulnerable training app that produces realistic attack logs for Wazuh.
+intentionally vulnerable training app that produces realistic attack logs for Splunk.
 
 <!-- Original design inspired by — not reproducing — the "Allsafe" firm from *Mr. Robot*. -->
 
@@ -37,7 +37,7 @@ domain:
 |---|---|---|
 | **What** | Enterprise security-vendor marketing site | Deliberately vulnerable training app |
 | **Stack** | HTML5 · CSS3 · vanilla JS (no build) | Flask · SQLite · gunicorn |
-| **Purpose** | A believable target surface + a portal ready for LDAP auth | Generate realistic attack logs for Wazuh |
+| **Purpose** | A believable target surface + a portal ready for LDAP auth | Generate realistic attack logs for Splunk |
 | **Exposure** | Safe to serve anywhere | **Isolated / disposable VM only** |
 | **VirtualHost** | `allsafe.conf` | `range.allsafe.local.conf` *(separate)* |
 
@@ -65,7 +65,7 @@ AllSafe/
 └── range/                    APP 2 — Allsafe Range (⚠️ intentionally vulnerable)
     ├── allsafe_range/
     │   ├── vulns/            one module per OWASP Top 10:2025 category
-    │   ├── logging_setup.py  structured JSON logging (Wazuh-ready)
+    │   ├── logging_setup.py  structured JSON logging (Splunk-ready)
     │   └── db.py             SQLite schema + seed data
     ├── tests_smoke.py       16-test suite: every vuln + the logging contract
     ├── Dockerfile · docker-compose.yml
@@ -102,7 +102,7 @@ python3 -m http.server 8000 --directory site
 ## APP 2 — Allsafe Range
 
 One deliberately vulnerable endpoint group per **OWASP Top 10:2025** category — each
-individually toggleable, each logging **structured JSON** for Wazuh. **The logs are the
+individually toggleable, each logging **structured JSON** for Splunk. **The logs are the
 point:** exploit something, then read the logs and work out what a detection rule for it
 would look like.
 

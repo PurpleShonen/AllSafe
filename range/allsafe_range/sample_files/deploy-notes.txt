@@ -2,4 +2,4 @@ Deploy notes — Allsafe Range
 ============================
 - Admin panel is at /a02/admin. Creds were never changed from the defaults.
 - Remember to turn off the directory index before this goes anywhere public.
-- Log shipping to Wazuh is configured in /etc/filebeat/filebeat.yml.
+- Log shipping to Splunk is configured in /opt/splunkforwarder/etc/system/local/inputs.conf.

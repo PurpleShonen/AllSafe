@@ -1,9 +1,15 @@
 # ============================================================================
 #  Filebeat input for Allsafe Range — ships the app's JSON logs AND Apache's
-#  own logs to the home-lab Wazuh/OpenSearch cluster.
+#  own logs to an Elastic/OpenSearch or Wazuh collector.
+#
+#  ALTERNATIVE SHIPPER — NOT the default. This lab's SIEM is Splunk on
+#  SPLUNK01; the default path is the Universal Forwarder (splunk-inputs.conf).
+#  Use this file only if you are pointing the range at Elastic/OpenSearch or a
+#  Wazuh manager instead. Run ONE shipper, not two, or you will double-index.
+#
 #  Merge these inputs into /etc/filebeat/filebeat.yml (or drop under
 #  filebeat.inputs). Wazuh can alternatively ingest these paths directly via
-#  the Wazuh agent's localfile config (see README-DEPLOYMENT for that variant).
+#  the Wazuh agent's localfile config.
 # ============================================================================
 filebeat.inputs:
 
@@ -44,11 +50,10 @@ filebeat.inputs:
       log_source: allsafe-range-apache
     fields_under_root: true
 
-# Point at your home-lab collector. If shipping over WireGuard, this is the
-# tunnel address of the Wazuh manager / Logstash, NOT a public IP.
+# Point at your collector's address on the SOC-LAB vSwitch.
 output.logstash:
-  hosts: ["10.66.0.1:5044"]
+  hosts: ["collector.allsafe.local:5044"]
 
 # Or, if you run OpenSearch directly:
 # output.elasticsearch:
-#   hosts: ["https://10.66.0.1:9200"]
+#   hosts: ["https://collector.allsafe.local:9200"]

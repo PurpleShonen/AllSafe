@@ -2,7 +2,7 @@
 Allsafe Range — structured logging
 ==================================
 Two log files, both newline-delimited JSON (one object per line), which is what
-Wazuh's `json` decoder and Filebeat's `json.keys_under_root` both expect:
+Splunk's `KV_MODE = json` / `INDEXED_EXTRACTIONS = json` expects:
 
   /var/log/allsafe-range/access.log   every HTTP request, one line each
   /var/log/allsafe-range/app.log      application events worth alerting on
@@ -52,7 +52,7 @@ class JsonLineFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         payload = {
-            # RFC3339 / ISO8601 UTC — Wazuh and Filebeat both parse this shape.
+            # RFC3339 / ISO8601 UTC — Splunk's TIME_FORMAT parses this shape.
             "timestamp": _dt.datetime.fromtimestamp(
                 record.created, _dt.timezone.utc
             ).isoformat(timespec="milliseconds").replace("+00:00", "Z"),

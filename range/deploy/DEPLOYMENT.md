@@ -1,40 +1,47 @@
 # Allsafe Range — deployment guide
 
-> ⚠️ Intentionally vulnerable. Deploy only on an isolated, disposable VM. See
+> ⚠️ Intentionally vulnerable. Deploy only inside the lab, on a VM you can roll
+> back. Never port-forward it to the internet. See
 > [`../README-WARNING.md`](../README-WARNING.md).
 
 Two supported shapes:
 
-- **A.** systemd + gunicorn behind Apache on a dedicated VM (recommended for the
-  "real external scan traffic" goal).
+- **A.** systemd + gunicorn behind Apache on WEB01 (recommended).
 - **B.** Docker Compose (fastest to stand up and tear down).
 
 ---
 
 ## Deployment model — the recommended one
 
-Run Allsafe Range on a **small, isolated cloud VM** (a cheap DigitalOcean /
-Linode / Hetzner droplet), **not** on the home network. This gets you genuine
-external-IP scan and attack traffic — real log data — with zero blast radius
-into the home lab. Snapshot the VM, run a session, roll back.
-
-Logs are shipped **back to the home-lab Wazuh instance over a WireGuard tunnel**,
-so the SIEM is never exposed to the internet. The droplet reaches in over the
-tunnel to deliver logs; nothing reaches the other way.
+Allsafe Range runs on **WEB01** (Ubuntu 26.04) alongside the marketing site, as
+a second Apache VirtualHost. WEB01 sits on the SOC-LAB vSwitch with the rest of
+the lab, so log shipping to SPLUNK01 is a plain internal connection — no tunnel,
+no public exposure.
 
 ```
-   Internet ──▶ [ droplet: Apache :80/:443 ] ──▶ 127.0.0.1:8080 (gunicorn)
-                        │                                │
-                        └── range_access/error.log       └── /var/log/allsafe-range/*.log
-                                     │                                │
-                                     └──────── WireGuard tunnel ──────┘
-                                                    │
-                                     [ home lab: Wazuh manager 10.66.0.1 ]
+   SOC-LAB vSwitch
+        │
+        ├─▶ [ WEB01 : Apache :80/:443 ] ──▶ 127.0.0.1:8080 (gunicorn)
+        │            │                              │
+        │            └── range_access/error.log     └── /var/log/allsafe-range/*.log
+        │                         │                              │
+        │                         └────── Splunk UF ─────────────┘
+        │                                     │
+        └─────────────────────────▶ [ SPLUNK01 : 9997 ]
 ```
 
-If you would rather run it on an isolated home-lab VLAN instead, that's fine —
-you just trade real external traffic for a network you fully control. Everything
-below still applies; skip the cloud-firewall section.
+Attacks come from WIN11-01 or ANALYST01 on the same switch — you drive them
+yourself rather than waiting for internet scan traffic. You trade real
+external noise for a network you fully control and can replay deliberately.
+
+> ⚠️ **Blast radius.** Range is intentionally vulnerable, and on this layout it
+> shares a host with the marketing site. A successful exploit gets code
+> execution as `allsafe-range` on WEB01. That is acceptable for a lab you can
+> rebuild — snapshot WEB01 before a session and roll back after — but it is a
+> real trade against the isolation the app's own
+> [`README-WARNING.md`](../README-WARNING.md) asks for. If you would rather keep
+> the separation, give Range its own VM on the vSwitch; everything below applies
+> unchanged except the vhost lives alone.
 
 ---
 
@@ -100,102 +107,83 @@ docker compose logs -f range
 docker compose down -v              # tear down INCLUDING data volumes
 ```
 
-To expose it for external scan traffic on the droplet, change the port mapping
-to `80:8080` (and ideally still front it with Apache/TLS). Otherwise it stays
-bound to loopback.
+To reach it from elsewhere on the vSwitch, change the port mapping to
+`80:8080` (and ideally still front it with Apache/TLS). Otherwise it stays bound
+to loopback.
 
 ---
 
-## Firewalling the isolated cloud VM
+## Firewalling WEB01
 
-Lock the droplet down to only what it needs. Example with `ufw`:
+Lock WEB01 down to what the lab actually needs. Example with `ufw`:
 
 ```bash
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw allow 22/tcp                 # SSH (ideally key-only, or via the tunnel)
-sudo ufw allow 80/tcp                 # the range (the traffic you want)
-sudo ufw allow 443/tcp               # if serving TLS
-sudo ufw allow in on wg0             # WireGuard tunnel interface (log shipping)
+sudo ufw allow 22/tcp                 # SSH from ANALYST01 (key-only)
+sudo ufw allow 80/tcp                 # the range + marketing site
+sudo ufw allow 443/tcp                # if serving TLS
 sudo ufw enable
 ```
 
-Better: move SSH itself onto the WireGuard tunnel and drop `22/tcp` from the
-public interface entirely, so only `80`/`443` face the internet.
+The Splunk UF connects **outbound** to SPLUNK01:9997, so no inbound rule is
+needed for log shipping. Nothing here should be port-forwarded from your Fedora
+host to the internet — the range is meant to be reachable from inside the
+vSwitch only.
 
 The app process never listens on a public interface — Apache is the only
 ingress, and gunicorn is on `127.0.0.1:8080`.
 
 ---
 
-## Log shipping to the home-lab Wazuh instance
+## Log shipping to SPLUNK01
 
-Ship **both** the app's JSON logs and Apache's own logs. Two options.
+Ship **both** the app's JSON logs and Apache's own logs.
 
-### Option 1 — Wazuh agent (simplest if you already run Wazuh)
+### Option 1 — Splunk Universal Forwarder (the lab's SIEM path)
 
-Install the Wazuh agent on the droplet, point it at the manager's **WireGuard**
-address, and add these `localfile` blocks to
-`/var/ossec/etc/ossec.conf`:
-
-```xml
-<localfile>
-  <log_format>json</log_format>
-  <location>/var/log/allsafe-range/app.log</location>
-</localfile>
-<localfile>
-  <log_format>json</log_format>
-  <location>/var/log/allsafe-range/access.log</location>
-</localfile>
-<localfile>
-  <log_format>apache</log_format>
-  <location>/var/log/apache2/range_access.log</location>
-</localfile>
-<localfile>
-  <log_format>apache</log_format>
-  <location>/var/log/apache2/range_error.log</location>
-</localfile>
-```
-
-The agent connects **outbound** to the manager over the tunnel (1514/udp or
-1514/tcp), so the SIEM never needs an inbound rule from the internet.
-
-### Option 2 — Filebeat or rsyslog
-
-If you ship to OpenSearch/Logstash rather than the Wazuh agent, use
-[`filebeat-allsafe-range.yml`](filebeat-allsafe-range.yml) (JSON parsing already
-configured) or [`rsyslog-allsafe-range.conf`](rsyslog-allsafe-range.conf). Point
-the output at the collector's **tunnel** address (e.g. `10.66.0.1`), never a
-public IP.
-
-### WireGuard, in brief
-
-On both the droplet and the home-lab collector:
-
-```ini
-# /etc/wireguard/wg0.conf  (droplet side)
-[Interface]
-Address = 10.66.0.2/24
-PrivateKey = <droplet-private-key>
-
-[Peer]                        # home-lab endpoint
-PublicKey = <homelab-public-key>
-Endpoint = <home-public-ip-or-ddns>:51820
-AllowedIPs = 10.66.0.0/24
-PersistentKeepalive = 25
-```
+Install the UF on WEB01 and drop in the three configs from this directory:
 
 ```bash
-sudo apt install -y wireguard
-sudo systemctl enable --now wg-quick@wg0
-ping 10.66.0.1                # the home-lab collector over the tunnel
+# Create the index on SPLUNK01 first: Settings > Indexes > New Index > allsafe_range
+
+sudo cp /opt/allsafe-range/deploy/splunk-inputs.conf \
+        /opt/splunkforwarder/etc/system/local/inputs.conf
+sudo cp /opt/allsafe-range/deploy/splunk-outputs.conf \
+        /opt/splunkforwarder/etc/system/local/outputs.conf
+sudo /opt/splunkforwarder/bin/splunk restart
 ```
 
-Now every log path in the table below reaches Wazuh over an encrypted tunnel,
-and the only internet-facing ports on the droplet are the ones serving the range
-itself.
+`splunk-props.conf` goes on **SPLUNK01**, not on WEB01 — see the header comment
+in that file for why (it changes if you switch to index-time extraction).
 
-| Source | Path on droplet | View it gives |
+The UF runs as root or as a dedicated `splunk` user; either way it needs read
+access to `/var/log/allsafe-range/` and `/var/log/apache2/`. If the UF runs
+unprivileged, add it to the `adm` group:
+
+```bash
+sudo usermod -aG adm splunk
+```
+
+Confirm the data is arriving, on SPLUNK01:
+
+```
+index=allsafe_range | stats count by sourcetype
+```
+
+You should see all four sourcetypes: `allsafe:range:app`,
+`allsafe:range:access`, `access_combined`, `apache_error`.
+
+### Option 2 — Filebeat or rsyslog (alternative shippers)
+
+Kept for anyone pointing this at Elastic/OpenSearch or a Wazuh manager instead
+of Splunk. Use [`filebeat-allsafe-range.yml`](filebeat-allsafe-range.yml) (JSON
+parsing already configured) or
+[`rsyslog-allsafe-range.conf`](rsyslog-allsafe-range.conf), and point the output
+at your collector's address on the vSwitch. These are **not** used by the
+default lab build — pick one shipper, not two, or you will double-index.
+
+| Source | Path on WEB01 | View it gives |
 |---|---|---|
 | App requests | `/var/log/allsafe-range/access.log` | Parsed params, `suspected` tags |
 | App events | `/var/log/allsafe-range/app.log` | Security events (the interesting ones) |
@@ -208,5 +196,6 @@ itself.
 
 - **systemd:** `sudo systemctl restart allsafe-range` reseeds the DB.
 - **Docker:** `docker compose down -v && docker compose up --build -d`.
-- **VM:** roll back to the pre-session snapshot. Treat the instance as
-  disposable — that is the operating model, not a fallback.
+- **VM:** roll back WEB01 to the pre-session snapshot. Snapshot before every
+  session — with the range sharing a host with the marketing site, the snapshot
+  is what keeps the blast radius at zero.
