@@ -1,0 +1,53 @@
+#!/bin/sh
+# Block credential material from entering this repo's history.
+#
+# A .gitignore only prevents *accidental* adds; `git add -f` walks straight past
+# it. This hook is the hard stop. Once a secret is committed, removing it means
+# rewriting history -- and if it was pushed, rotating the credential.
+#
+# Enable (once per clone):  git config core.hooksPath .githooks
+# Deliberate override:      git commit --no-verify
+
+set -e
+
+# Files intentionally tracked as part of the vulnerable range. These are fake
+# secrets used by the A02 file-exposure scenario, not real credentials.
+is_allowed_decoy() {
+	case "$1" in
+	range/allsafe_range/sample_files/.env) return 0 ;;
+	range/allsafe_range/sample_files/id_rsa.bak) return 0 ;;
+	esac
+	return 1
+}
+
+# Returns a reason string on stdout if the path looks like credential material.
+match_reason() {
+	base=${1##*/}
+	case "$base" in
+	config.md) echo "holds real lab credentials" ;;
+	.env | *.env | .env.*) echo "environment file" ;;
+	*.pem | *.key | *.p12 | *.pfx | *.jks) echo "private key or certificate" ;;
+	id_rsa* | id_ed25519* | *_rsa | *.ppk) echo "SSH private key" ;;
+	credentials | credentials.*) echo "credentials file" ;;
+	*.kdbx | .htpasswd) echo "password store" ;;
+	esac
+}
+
+blocked=""
+# ACMR: added, copied, modified, renamed. Deletions are fine.
+for path in $(git diff --cached --name-only --diff-filter=ACMR); do
+	is_allowed_decoy "$path" && continue
+	reason=$(match_reason "$path")
+	[ -n "$reason" ] && blocked="$blocked  $path  --  $reason
+"
+done
+
+if [ -n "$blocked" ]; then
+	printf '\n  pre-commit: refusing to commit credential material\n\n'
+	printf '%s\n' "$blocked"
+	printf 'Unstage it:      git restore --staged <path>\n'
+	printf 'If intentional:  git commit --no-verify\n\n'
+	exit 1
+fi
+
+exit 0

@@ -56,6 +56,8 @@ VirtualHosts** so they can be deployed, enabled, and disabled independently.
 
 ```
 AllSafe/
+├── .githooks/pre-commit      blocks credential-shaped files from being committed
+│
 ├── site/                     APP 1 — Allsafe Cybersecurity (static, safe)
 │   ├── index.html            Home · Services · About · Careers · Contact
 │   ├── assets/               single CSS file, vanilla JS, inline-SVG favicon
@@ -168,6 +170,29 @@ signal** — not to build a working attack platform:
   deployment can't be pivoted into credential theft with one request.
 
 The goal is realistic logs, not a functioning botnet node.
+
+---
+
+## Secrets hygiene
+
+Real lab credentials live in **`config.md`**, which is gitignored and must never be
+committed — this repo is public. The intentionally fake secrets under
+`range/allsafe_range/sample_files/` are *tracked on purpose*; they are props for the A02
+file-exposure scenario, not real material.
+
+Because `.gitignore` only stops accidental adds (`git add -f` ignores it), a `pre-commit`
+hook rejects credential-shaped paths outright. Enable it **once per clone**:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+It blocks `config.md`, `.env`, private keys and certs, and `credentials.*`, while
+allowing the two tracked range decoys. Override deliberately with `git commit --no-verify`.
+
+> [!IMPORTANT]
+> A secret that reaches a commit is not fixed by deleting it later — history has to be
+> rewritten, and if it was pushed, the credential has to be rotated.
 
 ---
 
