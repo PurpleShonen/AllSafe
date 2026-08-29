@@ -1,0 +1,58 @@
+# --- Secrets / credentials -------------------------------------------------
+# config.md holds lab credentials and must never be published.
+config.md
+**/config.md
+*.env
+.env
+.env.*
+# ...except the intentional decoy that is part of the range itself
+!range/allsafe_range/sample_files/.env
+secrets/
+credentials*
+*.pem
+*.key
+*_rsa
+*_rsa.bak
+*.p12
+*.pfx
+
+# --- SOC lab evidence & telemetry ------------------------------------------
+# Raw captures and log exports pulled off the range during triage.
+evidence/
+captures/
+exports/
+*.pcap
+*.pcapng
+*.evtx
+*.evt
+*.log
+logs/
+logs-test/
+*.log.gz
+*.json.gz
+*.csv.gz
+
+# --- Detection / reporting working files -----------------------------------
+drafts/
+scratch/
+*.draft.md
+notes-private.md
+
+# --- Runtime / build noise -------------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.db
+*.db-wal
+*.db-shm
+data/
+uploads/
+node_modules/
+
+# --- Editor / OS -----------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
